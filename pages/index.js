@@ -1,7 +1,14 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
+import { useState, useEffect } from 'react'
 
-export default function Home() {
+export default function Home(props) {
+	const [ breedList, setBreedList ] = useState([]);
+
+	useEffect(() => {
+		setBreedList(Object.keys(props.breeds))
+	}, []);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -13,7 +20,22 @@ export default function Home() {
         <h1 className={styles.title}>
           My Next.js Amplify app
         </h1>
+				<br/>
+				<select>
+					{ breedList.map(breed => <option key={breed} value={breed}>{breed}</option>) }
+				</select>
       </main>
     </div>
   )
+}
+
+export async function getServerSideProps(context) {
+	const url = "https://dog.ceo/api/breeds/list/all"
+  const res = await fetch(url)
+  const data = await res.json()
+	const breeds = data.message;
+
+  return {
+    props: { breeds }
+  }
 }
