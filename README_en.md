@@ -74,3 +74,134 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
 
+### / Page (Home)
+
+Let's update **pages/index.js**, which renders / root page.
+
+> More info on [Nextjs Routing](https://nextjs.org/docs/routing/introduction)
+
+```js
+/* pages/index.js */
+import Head from 'next/head'
+import styles from '../styles/Home.module.css'
+
+export default function Home() {
+  return (
+    <div className={styles.container}>
+      <Head>
+        <title>Create Next App</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <main className={styles.main}>
+        <h1 className={styles.title}>
+          My Next.js Amplify app
+        </h1>
+      </main>
+    </div>
+  )
+}
+```
+
+See if page loads correctly on a browser at `http://localhost:3000`
+
+![my-next-app](my-next-app.png)
+
+### Intializing a git repostory
+
+Let's create a git repository for this project at (https://github.com/new)
+
+Once you create a repository, let's initialize a git in your folder, and
+add the created repository url.
+
+```sh
+$ git init
+$ git remote add origin git@github.com:username/project-name.git
+$ git add .
+$ git commit -m 'initial commit'
+$ git push origin main
+```
+
+```sh
+$ amplify console
+```
+
+### Configuring the Next applicaion with Amplify
+
+Once we have Amplify project ready, we now need to make our Next.js app
+to be aware of Amplify project.
+We can do this by making the top level component to configure Amplify
+with `src/aws-exports.js` file
+
+Let's open **pages/\_app.js** and add the following.
+
+```diff
+  import '../styles/globals.css'
++ import Amplify from "aws-amplify";
++ import config from "../src/aws-exports";
++ Amplify.configure(config);
+
+  function MyApp({ Component, pageProps }) {
+    return <Component {...pageProps} />
+  }
+
+  export default MyApp
+```
+
+Once it's done, our Next.app is ready to use AWS managed by Amplify.
+
+
+### Amplify Hosting 생성
+
+Let's create a new Amplify project in [Amplify console](console.aws.amazon.com/amplify/home)
+
+
+Select a region.
+
+Click on `New App` -> `Host web app`
+
+![AWS_Amplify_Console](AWS_Amplify_Console.png)
+
+### Connect Repository
+
+Let's select the repository service our code is hosted on.
+
+![AWS_Amplify_Console_02](AWS_Amplify_Console_02.png)
+
+Select branch and repository.
+
+> repository service (e.g. github) will ask you to authorize
+
+![AWS_Amplify_Console_02](AWS_Amplify_Console_03.png)
+
+### Create a Role
+
+
+Server-side rendering deployment will require an IAM role.
+
+Click on `Create new role` and go to IAM console.
+
+![configure build settings](configure-build-settings.png)
+
+Create a role, and go back to Amplify console.
+
+![create-role](create-role.png)
+
+click `Next` button
+
+![build-and-test-settings](build-and-test-settings.png)
+
+### Deployment
+
+Once deployment starts, we can see the progress.
+When deployment is finished, we can see the url where our app is
+deployed on.
+
+![build-stages](build-stages.png)
+
+
+### Removing app
+
+In Amplify console, click `Actions` -> `Delete App`
+
+![delete-app](delete-app.png)

@@ -74,3 +74,100 @@ yarn dev
 
 `pages/index.js` 파일을 변경해봅시다. 화면이 자동으로 업데이트 되는것을 확인할수 있을것입니다.
 
+### / Page (Home)
+
+**pages/index.js** 페이지를 다음과 같이 바꿔봅시다.
+참고로 `pages/index.js` 는 / 페이지를 보여줍니다.
+
+> [Nextjs Routing 관련 정보](https://nextjs.org/docs/routing/introduction)
+
+```js
+/* pages/index.js */
+import Head from 'next/head'
+import styles from '../styles/Home.module.css'
+
+export default function Home() {
+  return (
+    <div className={styles.container}>
+      <Head>
+        <title>Create Next App</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <main className={styles.main}>
+        <h1 className={styles.title}>
+          My Next.js Amplify app
+        </h1>
+      </main>
+    </div>
+  )
+}
+```
+
+`http://localhost:3000` 에서 제대로 뜨는지 브라우져로 확인해봅시다.
+
+![my-next-app](my-next-app.png)
+
+### git repostory 초기화
+
+본 프로젝트를 위한 git repository를 하나 만들어주세요.
+(https://github.com/new)
+repository 생성을 하였으면, 로컬에서 git 을 초기화 하고, 생성된
+repository 의 url 을 추가해주세요.
+
+```sh
+$ git init
+$ git remote add origin git@github.com:username/project-name.git
+$ git add .
+$ git commit -m 'initial commit'
+$ git push origin main
+```
+
+### Amplify Hosting 생성
+
+[Amplify console](console.aws.amazon.com/amplify/home) 로 이동하여
+새로운 프로젝트를 만들어봅시다.
+
+
+Region 을 선택해주세요. New App 을 클릭하여 `Host web app` 을
+선택해주세요.
+
+![AWS_Amplify_Console](AWS_Amplify_Console.png)
+
+### Repository 연결
+우리의 코드가 올라가 있는 repository service 를 선택해주세요.
+
+![AWS_Amplify_Console_02](AWS_Amplify_Console_02.png)
+
+
+repository 와 branch 를 선택해주세요.
+> repository service (예 : github) 에서 authorization 이 필요합니다.
+
+![AWS_Amplify_Console_02](AWS_Amplify_Console_03.png)
+
+### Role 생성
+Server-side rendering deployment 를 위해선 IAM role 이 필요합니다.
+`Create new role` 을 클릭하면 IAM 콘솔로 이동합니다.
+
+![configure build settings](configure-build-settings.png)
+
+role 을 생성한후, Amplify console 화면으로 돌아옵니다.
+
+![create-role](create-role.png)
+
+Next 버튼을 누르면...
+
+![build-and-test-settings](build-and-test-settings.png)
+
+### 배포
+
+배포가 시작되고 상태를 확인할수 있습니다. 배포가 완료되면  url 을
+확인하실수 있습니다.
+
+![build-stages](build-stages.png)
+
+### Removing app
+
+Amplify console 에서 Actions -> Delete App 을 선택해주세요.
+
+![delete-app](delete-app.png)
