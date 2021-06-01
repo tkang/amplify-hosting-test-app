@@ -2,11 +2,11 @@ import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import { useState, useEffect } from 'react'
 
-export default function Home(props) {
+export default function Home({breeds = []}) {
 	const [ breedList, setBreedList ] = useState([]);
 
 	useEffect(() => {
-		setBreedList(Object.keys(props.breeds))
+		setBreedList(Object.keys(breeds))
 	}, []);
 
   return (
@@ -22,7 +22,7 @@ export default function Home(props) {
         </h1>
 				<br/>
 				<select>
-					{ breedList.map(breed => <option key={breed} value={breed}>{breed}</option>) }
+          { breedList.map(breed => <option key={breed} value={breed}>{breed}</option>) }
 				</select>
       </main>
     </div>
@@ -30,10 +30,11 @@ export default function Home(props) {
 }
 
 export async function getServerSideProps(context) {
-	const url = "https://dog.ceo/api/breeds/list/all"
-  const res = await fetch(url)
-  const data = await res.json()
-	const breeds = data.message;
+  //const url = "https://dog.ceo/api/breeds/list/all"
+  //const res = await fetch(url)
+  //const data = await res.json()
+  ///const breeds = data.message;
+  const breeds = [];
 
   return {
     props: { breeds }
