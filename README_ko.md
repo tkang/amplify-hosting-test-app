@@ -10,7 +10,6 @@
 
 본 가이드를 마치면, AWS 위에 배포된 web application 을 확인하실수 있습니다.
 
-
 ## Overview
 
 [Create Next App](https://nextjs.org/docs/api-reference/create-next-app) 을 이용하여 새로운 next.js 프로젝트를 생성합니다.
@@ -83,24 +82,48 @@ yarn dev
 
 ```js
 /* pages/index.js */
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import Head from "next/head";
+import styles from "../styles/Home.module.css";
+import { useState, useEffect } from "react";
 
-export default function Home() {
+export default function Home({ breeds = [] }) {
+  const [breedList, setBreedList] = useState([]);
+
+  useEffect(() => {
+    setBreedList(Object.keys(breeds));
+  }, []);
+
   return (
     <div className={styles.container}>
       <Head>
-        <title>Create Next App</title>
+        <title>Amplify Hosting Test</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          My Next.js Amplify app
-        </h1>
+        <h1 className={styles.title}>Amplify Hosting Test App</h1>
+        <br />
+        <select>
+          {breedList.map((breed) => (
+            <option key={breed} value={breed}>
+              {breed}
+            </option>
+          ))}
+        </select>
       </main>
     </div>
-  )
+  );
+}
+
+export async function getServerSideProps(context) {
+  const url = "https://dog.ceo/api/breeds/list/all";
+  const res = await fetch(url);
+  const data = await res.json();
+  const breeds = data.message;
+
+  return {
+    props: { breeds },
+  };
 }
 ```
 
@@ -128,24 +151,25 @@ $ git push origin main
 [Amplify console](console.aws.amazon.com/amplify/home) 로 이동하여
 새로운 프로젝트를 만들어봅시다.
 
-
 Region 을 선택해주세요. New App 을 클릭하여 `Host web app` 을
 선택해주세요.
 
 ![AWS_Amplify_Console](AWS_Amplify_Console.png)
 
 ### Repository 연결
+
 우리의 코드가 올라가 있는 repository service 를 선택해주세요.
 
 ![AWS_Amplify_Console_02](AWS_Amplify_Console_02.png)
 
-
 repository 와 branch 를 선택해주세요.
+
 > repository service (예 : github) 에서 authorization 이 필요합니다.
 
 ![AWS_Amplify_Console_02](AWS_Amplify_Console_03.png)
 
 ### Role 생성
+
 Server-side rendering deployment 를 위해선 IAM role 이 필요합니다.
 `Create new role` 을 클릭하면 IAM 콘솔로 이동합니다.
 
@@ -161,7 +185,7 @@ Next 버튼을 누르면...
 
 ### 배포
 
-배포가 시작되고 상태를 확인할수 있습니다. 배포가 완료되면  url 을
+배포가 시작되고 상태를 확인할수 있습니다. 배포가 완료되면 url 을
 확인하실수 있습니다.
 
 ![build-stages](build-stages.png)

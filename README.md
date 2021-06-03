@@ -10,7 +10,6 @@ Sample application will be a server-side rendered application, using Next.js dat
 
 Once users follow this guide, they will have a web application running on AWS.
 
-
 ## Overview
 
 We will create a new project using Create Next App. We will then set up a git repository that will be hooked up to Amplify hosting for CI/CD.
@@ -82,24 +81,48 @@ Let's update **pages/index.js**, which renders / root page.
 
 ```js
 /* pages/index.js */
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import Head from "next/head";
+import styles from "../styles/Home.module.css";
+import { useState, useEffect } from "react";
 
-export default function Home() {
+export default function Home({ breeds = [] }) {
+  const [breedList, setBreedList] = useState([]);
+
+  useEffect(() => {
+    setBreedList(Object.keys(breeds));
+  }, []);
+
   return (
     <div className={styles.container}>
       <Head>
-        <title>Create Next App</title>
+        <title>Amplify Hosting Test</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          My Next.js Amplify app
-        </h1>
+        <h1 className={styles.title}>Amplify Hosting Test App</h1>
+        <br />
+        <select>
+          {breedList.map((breed) => (
+            <option key={breed} value={breed}>
+              {breed}
+            </option>
+          ))}
+        </select>
       </main>
     </div>
-  )
+  );
+}
+
+export async function getServerSideProps(context) {
+  const url = "https://dog.ceo/api/breeds/list/all";
+  const res = await fetch(url);
+  const data = await res.json();
+  const breeds = data.message;
+
+  return {
+    props: { breeds },
+  };
 }
 ```
 
@@ -150,11 +173,9 @@ Let's open **pages/\_app.js** and add the following.
 
 Once it's done, our Next.app is ready to use AWS managed by Amplify.
 
-
 ### Amplify Hosting 생성
 
 Let's create a new Amplify project in [Amplify console](console.aws.amazon.com/amplify/home)
-
 
 Select a region.
 
@@ -175,7 +196,6 @@ Select branch and repository.
 ![AWS_Amplify_Console_02](AWS_Amplify_Console_03.png)
 
 ### Create a Role
-
 
 Server-side rendering deployment will require an IAM role.
 
@@ -198,7 +218,6 @@ When deployment is finished, we can see the url where our app is
 deployed on.
 
 ![build-stages](build-stages.png)
-
 
 ### Removing app
 
