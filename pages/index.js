@@ -30,11 +30,10 @@ export default function Home({breeds = []}) {
 }
 
 export async function getServerSideProps(context) {
-  //const url = "https://dog.ceo/api/breeds/list/all"
-  //const res = await fetch(url)
-  //const data = await res.json()
-  ///const breeds = data.message;
-  const breeds = [];
+  const url = "https://dog.ceo/api/breeds/list/all"
+  const res = await fetch(url)
+  const data = await res.json()
+  const breeds = data.message;
 
   return {
     props: { breeds }
